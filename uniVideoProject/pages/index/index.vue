@@ -1,14 +1,28 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
-		<view class="text-area">
-			<text class="title">{{title}}</text>
+		<uni-icon type="person" size="30"></uni-icon>
+		<!-- <span class="iconfont icon-paihangbang"></span> -->
+		<!-- @click="goPage('login')"
+		@click="goPage('tabbar')"
+		@click="goPage('swiperbar')"
+		@click="goPage('scrolltop')" -->
+	<!-- 	<view class="title" >login 下方弹出popular</view>
+		<view class="title" >scroll tabbar</view>
+		<view class="title" >swiperbar </view>
+		<view class="title" >scrolltop </view> -->
+		<!-- <view class="websocket" @click="creatWebsocket">
+			websocket
+		</view> -->
+		<view class="home" @click="goPage('home')">
+			首页
 		</view>
 	</view>
 </template>
 
 <script>
+	import uniIcon from "@/components/uni-icon/uni-icon.vue"
 	export default {
+		components: {uniIcon},
 		data() {
 			return {
 				title: 'Hello'
@@ -18,35 +32,85 @@
 
 		},
 		methods: {
+			goPage:function(page){
+				console.log(page)
+					uni.navigateTo({
+					url: '../'+page+'/'+page
+				});
+			},
+			// socket
+			creatWebsocket:function(){
+				uni.connectSocket({
+					url: 'ws://192.168.1.101:17400',
+					data() {
+						return {
+							x: '',
+							y: ''
+						};
+					},
+					header: {
+						'content-type': 'application/json'
+					},
+					// protocols: ['protocol1'],
+					method: 'GET',
+					success:function(res){
+						console.log(res)
+					},
+					fail:function(err){
+						console.log(err)
+					},
+					complete:function(com){
+						console.log(com)
+					}
+				});
+// struct msg  //8
+// {
+// 	int nLen;            //整个包的长度
+// 	int nCMD;            //协议id
+// 	int nZipLen;        
+// 	char[] jsData        //长度:nLen-4*3
+// };
+				uni.onSocketOpen(function (res) {
+				  console.log('WebSocket连接已打开！');
+				});
+				// send
+				var socketOpen = false;
+				var socketMsgQueue = ["少时诵诗书所所"];
 
+				// uni.connectSocket({
+				//   url: 'ws://192.168.1.101:17400'
+				// });
+
+				uni.onSocketOpen(function (res) {
+				  socketOpen = true;
+				  for (var i = 0; i < socketMsgQueue.length; i++) {
+					sendSocketMessage(socketMsgQueue[i]);
+				  }
+				  socketMsgQueue = [];
+				});
+
+				function sendSocketMessage(msg) {
+				  if (socketOpen) {
+					uni.sendSocketMessage({
+					  data: msg
+					});
+				  } else {
+					socketMsgQueue.push(msg);
+				  }
+				}
+				// 
+			}
 		}
 	}
 </script>
 
-<style>
-	.content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.logo {
-		height: 200upx;
-		width: 200upx;
-		margin-top: 200upx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50upx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36upx;
-		color: #8f8f94;
-	}
+<style lang="scss">
+@import '../../iconfont/iconfont.css';
+.content {
+	// display: flex;
+	// flex-direction: column;
+	// align-items: center;
+	// justify-content: center;
+	text-align: center;
+}
 </style>
