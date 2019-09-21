@@ -80,6 +80,7 @@ page{
 			width: 538rpx;
 			height: 54rpx;
 			color:#ACACAC;
+			border-radius:8px;
 			font-size: 30rpx;
 			font-weight:400;
 			background-color:#343434;

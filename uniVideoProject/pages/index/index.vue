@@ -223,7 +223,7 @@
 				  uni.onSocketMessage(function (res2) {
 					// console.log(res2.data)
 			  
-				   console.log(work(res2.data));
+				   work(res2.data);
 					
 				    
 				  });
