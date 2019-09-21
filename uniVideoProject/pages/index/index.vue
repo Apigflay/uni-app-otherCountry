@@ -29,12 +29,14 @@
 </template>
 
 <script>
+	import {encrypt,decrypt,system,systemId,base64ToArrayBuffer,sendData,fillstr2ab,sendD} from "../../lib/js/GlobalFunction.js"
 	import uniIcon from "@/components/uni-icon/uni-icon.vue"
 	export default {
 		components: {uniIcon},
 		data() {
 			return {
-				title: 'Hello'
+				title: 'Hello',
+				aaa:null,
 			}
 		},
 		onLoad() {
@@ -104,25 +106,82 @@
 	// ij0kQBgjBZ5kqY0cdjdGLoe/l16jnI7sFig+7VYrhyc=
 			// ----gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw=
 			goTestApi:function(){
-				console.log(this.str2UTF8('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw'))
-				var array =this.str2UTF8('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw')
+				console.log(this.str2UTF8('72tBoL2h0Nfdx9vr6O9Coyl9TCSwV+ziICCATukKP58z4TbagQsFHBYswhkkj1ZW1LZH7ltXbXD147yop9G1uEA8+TmtfjyvPun0wfzSdDCJzBa/RjFsPccMM/Eh63bdjS0R0CB7r/usAIMfAnLL2Zw3UfYR1fjX/ISAZ0IQBsyh8ueZ5i8IL82vmonBTGlNk9dPv8aX3Orc/kWRiYZk0g=='))
+				// var array =this.str2UTF8('72tBoL2h0Nfdx9vr6O9Coyl9TCSwV+ziICCATukKP58z4TbagQsFHBYswhkkj1ZW1LZH7ltXbXD147yop9G1uEA8+TmtfjyvPun0wfzSdDCJzBa/RjFsPccMM/Eh63bdjS0R0CB7r/usAIMfAnLL2Zw3UfYR1fjX/ISAZ0IQBsyh8ueZ5i8IL82vmonBTGlNk9dPv8aX3Orc/kWRiYZk0g==')
 				
-				console.log(this.base64ToArrayBuffer('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw'))
-				var array =this.base64ToArrayBuffer('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw')
+				console.log(this.base64ToArrayBuffer('72tBoL2h0Nfdx9vr6O9Coyl9TCSwV+ziICCATukKP58z4TbagQsFHBYswhkkj1ZW1LZH7ltXbXD147yop9G1uEA8+TmtfjyvPun0wfzSdDCJzBa/RjFsPccMM/Eh63bdjS0R0CB7r/usAIMfAnLL2Zw3UfYR1fjX/ISAZ0IQBsyh8ueZ5i8IL82vmonBTGlNk9dPv8aX3Orc/kWRiYZk0g=='))
+				var array =this.base64ToArrayBuffer('72tBoL2h0Nfdx9vr6O9Coyl9TCSwV+ziICCATukKP58z4TbagQsFHBYswhkkj1ZW1LZH7ltXbXD147yop9G1uEA8+TmtfjyvPun0wfzSdDCJzBa/RjFsPccMM/Eh63bdjS0R0CB7r/usAIMfAnLL2Zw3UfYR1fjX/ISAZ0IQBsyh8ueZ5i8IL82vmonBTGlNk9dPv8aX3Orc/kWRiYZk0g==')
 
-				// console.log(this.stringToBytes('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw'))
-				// var array =this.stringToBytes('gXn4uTUfkPhq1G7dMW7Y2gVcTCj8eIwqiAW18JJWzpw')
+				console.log(this.stringToBytes('LI5D75tfGYKk99euqcoA4A=='))
+				// var array =this.stringToBytes('LI5D75tfGYKk99euqcoA4A==')
 				
 				// {'user':1}
 				// var array = [56, 97, 51, 100, 50, 52, 52, 48, 49, 56, 50, 51, 48, 53, 57, 101, 54, 52, 97, 57, 56, 100, 49, 99, 55, 54, 51, 55, 52, 54, 50, 101, 56, 55, 98, 102, 57, 55, 53, 101, 97, 51, 57, 99, 56, 101, 101, 99, 49, 54, 50, 56, 51, 101, 101, 100, 53, 54, 50, 98, 56, 55, 50, 55]
 				var xhr = new XMLHttpRequest;
-				xhr.open("POST",'http://60.191.222.11:8044/account/test', false);
+				xhr.open("POST",'http://60.191.222.11:8044/Account/userRegisterPhone', true);
 				xhr.send(array);
 				
 				
 			},
 			// socket
 			creatWebsocket:function(){
+					var array =JSON.stringify({
+						"userName": "15713801628",
+						"pwd": "058566",
+						"devId": "wwww",
+						"devType": "eeee",
+						"productType": 3,
+						"isRelogin": false,
+						"loginWay": 1,
+						"language": 0,
+						"ver": "1.00",
+						"ip":"127.0.0.1"
+					})
+					
+
+
+					
+
+
+
+//============================================接受消息块=======================================
+				function con(arr1,arr2){
+					console.log(arr1)
+					console.log(arr2)
+					return arr1
+				}
+				var that =this;
+				function work(data) {
+					console.log(that.aaa)
+					var str = ""
+					var fileReader = new FileReader();
+					fileReader.onload = function (progressEvent) {
+						console.log(1)
+						var arrayBuffer = this.result; // arrayBuffer即为blob对应的arrayBuffer
+						var HeadRecv = new Uint32Array(arrayBuffer, 0, 3);
+						var strArray = new Uint8Array(arrayBuffer, 12, HeadRecv[0] - 12 - 1);
+						str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
+
+						that.aaa=str;
+						console.log(this)
+						// console.log(HeadRecv[1],JSON.parse(str))
+					};
+					fileReader.readAsArrayBuffer(data);
+					console.log("2",str)
+					return 'haha';
+				}
+			
+					var arr = sendD(array)
+					// console.log(arr)
+				// struct msg  //8
+				// {
+				// 	int nLen;            //整个包的长度
+				// 	int nCMD;            //协议id
+				// 	int nZipLen;        
+				// 	char[] jsData        //长度:nLen-4*3
+				// };
+				
+				var socketOpen = false;
 				uni.connectSocket({
 					url: 'ws://192.168.1.101:17400',
 					data() {
@@ -134,53 +193,53 @@
 					header: {
 						'content-type': 'application/json'
 					},
-					// protocols: ['protocol1'],
 					method: 'GET',
 					success:function(res){
-						console.log(res)
-					},
-					fail:function(err){
-						console.log(err)
-					},
-					complete:function(com){
-						console.log(com)
+						// console.log(res)
+						
 					}
 				});
-// struct msg  //8
-// {
-// 	int nLen;            //整个包的长度
-// 	int nCMD;            //协议id
-// 	int nZipLen;        
-// 	char[] jsData        //长度:nLen-4*3
-// };
+				
+					
+
+				
+// encrypt,decrypt,system,systemId,base64ToArrayBuffer,sendData
 				uni.onSocketOpen(function (res) {
+					socketOpen = true;
+					// console.log(res)
 				  console.log('WebSocket连接已打开！');
+				  uni.sendSocketMessage({
+				    data:arr,
+				    success:function(res1){
+						console.log(res1)
+				    },
+				    fail:function(err){
+				  	 console.log(err)
+				    },
+				    complete:function(com){
+				  	  // console.log(com)
+				    }
+				  });
+				  uni.onSocketMessage(function (res2) {
+					// console.log(res2.data)
+			  
+				   console.log(work(res2.data));
+					
+				    
+				  });
+					  
 				});
-				// send
-				var socketOpen = false;
-				var socketMsgQueue = ["少时诵诗书所所"];
 
-				// uni.connectSocket({
-				//   url: 'ws://192.168.1.101:17400'
-				// });
+// 				uni.onSocketError(function (res) {
+// 				  console.log('WebSocket连接打开失败，请检查！');
+// 				});
+				// send-----
 
-				uni.onSocketOpen(function (res) {
-				  socketOpen = true;
-				  for (var i = 0; i < socketMsgQueue.length; i++) {
-					sendSocketMessage(socketMsgQueue[i]);
-				  }
-				  socketMsgQueue = [];
-				});
 
-				function sendSocketMessage(msg) {
-				  if (socketOpen) {
-					uni.sendSocketMessage({
-					  data: msg
-					});
-				  } else {
-					socketMsgQueue.push(msg);
-				  }
-				}
+
+				
+
+				//send-----
 				// 
 			}
 		}

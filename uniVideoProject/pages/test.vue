@@ -1,5 +1,6 @@
 <!-- 
  主页           pages/home1/home1
+ 启动页         pages/startup/startup
  
  
  
@@ -10,4 +11,9 @@
  搜索				pages/search/search 
  标签				pages/tagsearch/tagsearch
  视频				pages/video/video
+ 信息				pages/news/news
+ 信息搜索			pages/newsearch/newsearch
+ 聊天				pages/chat/chat
+ 新增聊天			pages/newchat/newchat
+ 聊天窗口			pages/chatpop/chatpop
  -->

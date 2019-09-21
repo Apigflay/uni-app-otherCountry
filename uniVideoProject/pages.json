@@ -90,6 +90,54 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/startup/startup",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/news/news",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/newsearch/newsearch",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/chat/chat",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/newchat/newchat",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/chatpop/chatpop",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",//导航栏标题颜色及状态栏前景颜色，仅支持 black/white
