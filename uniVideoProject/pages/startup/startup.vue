@@ -183,7 +183,7 @@
 </template>
 
 <script>
-	import {encrypt,decrypt,system,systemId,base64ToArrayBuffer,sendData} from "../../lib/js/GlobalFunction.js"
+	import {encrypt,decrypt,system,systemId,base64ToArrayBuffer,sendData,sendD,work,regMail} from "../../lib/js/GlobalFunction.js"
 	export default {
 		
 		data() {
@@ -382,6 +382,91 @@
 				if(event.target.value.length==6){
 					this.phoneSixStatus=true;
 					
+					var array =JSON.stringify({	
+						"userName": this.phobeNum,
+						"pwd": this.phoneSix,
+						"devId": systemId(),
+						"devType": system(),
+						"productType": 3,
+						"isRelogin": false,
+						"loginWay": 1,
+						"language": 0,
+						"ver": "1.00",
+						"ip":"127.0.0.1"
+					})
+					console.log(array)
+					var arr = sendD(array);
+					uni.connectSocket({
+						url: 'ws://192.168.1.101:17400',
+						// data() {
+						// 	return {
+						// 		x: '',
+						// 		y: ''
+						// 	};
+						// },
+						// header: {
+						// 	'content-type': 'application/json'
+						// },
+						// method: 'GET',
+						// success:function(res){
+						// 	// console.log(res)
+						// 	
+						// }
+					});
+					uni.onSocketOpen(function (res) {
+						
+						// console.log(res)
+					  console.log('WebSocket连接已打开！');
+					  uni.sendSocketMessage({
+					    data:arr,
+					    success:function(res1){
+							console.log(res1)
+					    },
+					    fail:function(err){
+					  	 console.log(err)
+					    },
+					    complete:function(com){
+					  	  // console.log(com)
+					    }
+					  });
+					  uni.onSocketMessage(function (res2) {
+					  	console.log(res2.data)
+					  			  
+					     var fileReader = new FileReader();
+					     fileReader.onload = function (progressEvent) {
+					     	var arrayBuffer = this.result; // arrayBuffer即为blob对应的arrayBuffer
+					     	var HeadRecv = new Uint32Array(arrayBuffer, 0, 3);
+					     	var strArray = new Uint8Array(arrayBuffer, 12, HeadRecv[0] - 12 - 1);
+					     	var str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
+					     	// console.log(HeadRecv[1],JSON.parse(str))
+					     	//to do
+							if(HeadRecv[1]==10002){
+								uni.navigateTo({
+									url: '/pages/home/home'
+								});
+								uni.setStorage({
+									key: 'storage_login_str',
+									data: str,
+									success: function () {
+										console.log('success');
+									}
+								});
+							}else{
+								uni.showToast({
+									title: '标题',
+									duration: 1500
+								});
+							}
+					     	console.log(HeadRecv[1])
+					     	console.log(JSON.parse(str))
+					     };
+					     fileReader.readAsArrayBuffer(res2.data);
+					  	
+					      
+					    });
+					  	  
+					  });
+					
 				}else{
 					this.phoneSixStatus=false;
 				
@@ -390,7 +475,8 @@
 			getMailNumW:function(event){//输入邮箱  进行验证
 				console.log(event.target.value)
 				this.mailNum = event.target.value
-				if(event.target.value.length>6){
+				var test = regMail(event.target.value)
+				if(test){
 					this.btnStatus=true;
 					this.btnMailStatus=true;
 					this.tip='将向您发送 One Click 登录的验证邮件';
@@ -405,6 +491,92 @@
 				this.mailSix = event.target.value
 				if(event.target.value.length==6){
 					this.mailSixStatus=true;
+					console.log("socket content")
+					var array =JSON.stringify({
+						"userName": this.mailNum,
+						"pwd": this.mailSix,
+						"devId": systemId(),
+						"devType": system(),
+						"productType": 3,
+						"isRelogin": false,
+						"loginWay": 0,
+						"language": 0,
+						"ver": "1.00",
+						"ip":"127.0.0.1"
+					})
+					console.log(array)
+					var arr = sendD(array);
+					uni.connectSocket({
+						url: 'ws://192.168.1.101:17400',
+						// data() {
+						// 	return {
+						// 		x: '',
+						// 		y: ''
+						// 	};
+						// },
+						// header: {
+						// 	'content-type': 'application/json'
+						// },
+						// method: 'GET',
+						// success:function(res){
+						// 	// console.log(res)
+						// 	
+						// }
+					});
+					uni.onSocketOpen(function (res) {
+						
+						// console.log(res)
+					  console.log('WebSocket连接已打开！');
+					  uni.sendSocketMessage({
+					    data:arr,
+					    success:function(res1){
+							console.log(res1)
+					    },
+					    fail:function(err){
+					  	 console.log(err)
+					    },
+					    complete:function(com){
+					  	  // console.log(com)
+					    }
+					  });
+					  uni.onSocketMessage(function (res2) {
+					  	console.log(res2.data)
+					  			  
+					     var fileReader = new FileReader();
+					     fileReader.onload = function (progressEvent) {
+					     	var arrayBuffer = this.result; // arrayBuffer即为blob对应的arrayBuffer
+					     	var HeadRecv = new Uint32Array(arrayBuffer, 0, 3);
+					     	var strArray = new Uint8Array(arrayBuffer, 12, HeadRecv[0] - 12 - 1);
+					     	var str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
+					     	// console.log(HeadRecv[1],JSON.parse(str))
+					     	//to do
+							if(HeadRecv[1]==10002){
+								uni.navigateTo({
+									url: '/pages/home/home'
+								});
+								uni.setStorage({
+									key: 'storage_login_str',
+									data: str,
+									success: function () {
+										console.log('success');
+									}
+								});
+							}else{
+								uni.showToast({
+									title: '标题',
+									duration: 1500
+								});
+							}
+					     	console.log(HeadRecv[1])
+					     	console.log(JSON.parse(str))
+					     };
+					     fileReader.readAsArrayBuffer(res2.data);
+					  	
+					      
+					    });
+					  	  
+					  });
+					
 					
 				}else{
 					this.mailSixStatus=false;

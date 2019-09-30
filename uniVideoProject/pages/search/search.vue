@@ -71,7 +71,7 @@
 												<image class="photo"></image>
 											</view>
 											<view class="center">
-												<text class="p1">@sasa.baby1235 <view v-if="show_spot" class="spot"></view> </text>
+												<view class="p1">@sasa.baby1235 <view v-if="show_spot" class="spot"></view> </view>
 												<text class="p2">9月vip为两台飞机  享有8.9月百部影片，你的女神...</text>
 											</view>
 										</view>
@@ -82,6 +82,8 @@
 					</view>
 				</view>
 			</view>
+			<!-- TagBar -->
+			<!-- <TagBar></TagBar> -->
 		</view>
 	</view>
 </template>

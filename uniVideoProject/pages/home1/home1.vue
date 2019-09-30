@@ -1,4 +1,4 @@
-<template>
+ <template>
 	<view class="content">
 		<!-- navBar -->
 		<view class="navBar" :style="style">
@@ -18,7 +18,7 @@
 		<!-- videoArea -->
 		<view class="videoArea">
 			<view class="video">
-				<video class="promotionalVideo" :autoplay="true" :loop="true" objectFit="cover" :controls="false" src="../../static/promotionalVideo.mp4" ></video>
+				<video class="promotionalVideo" :autoplay="true" muted="muted" :loop="true" objectFit="cover" :controls="false" src="../../static/promotionalVideo.mp4" ></video>
 			</view>
 			<view class="videoMessageArea">
 				<view class="photoArea">
@@ -124,16 +124,106 @@
 		</view>
 		<!-- bannerArea -->
 		<view class="banner">
-			<image class="img" src="../../static/imgs/19032400.jpg" mode=""></image>
+			<!-- <image class="img" src="../../static/imgs/19032400.jpg" mode=""></image> -->
+			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+				<swiper-item>
+					<view class="swiper-item uni-bg-red">A</view>
+				</swiper-item>
+				<swiper-item>
+					<view class="swiper-item uni-bg-green">B</view>
+				</swiper-item>
+				<swiper-item>
+					<view class="swiper-item uni-bg-blue">C</view>
+				</swiper-item>
+			</swiper>
+		</view>
+		<!--  -->
+		<!-- 遮罩层 -->
+		<view class="marsk" v-if="marskShow" @click="marskNone"></view>
+		<!-- 邮箱登录获取验证码 -->
+		<view class="getCheckArea"  v-if="getCheckArea">
+			<!-- <image class="more" @click="getCheckAreaBack" src="../../static/imgs/more1.png" mode=""></image> -->
+			<view class="title">
+				绑定邮箱
+			</view>
+			<view class="inputArea" :class="btnMailStatus==false?'inputAreaErr':''">
+				<image class="img" src="../../static/imgs/mail1.png" mode=""></image>
+				<input class="input" type="text" placeholder="电子邮件" v-model="mailNum" @input="getMailNumW" />
+			</view>
+			<view class="tips" :class="btnMailStatus==false?'tipsErr':''">
+				{{tip}}
+			</view>
+			<view class="btn" v-if="btnStatus==false">
+				下一步
+			</view>
+			<view class="btn btnOk" @click="goWrite" v-if="btnStatus==true">
+				下一步
+			</view>
+		</view>
+		<!-- 邮箱登录输入验证码 -->
+		<view class="mailWriteArea" v-if="mailWriteArea">
+			<image class="back" @click="mailWriteAreaBack" src="../../static/imgs/more1.png" mode=""></image>
+			<view class="title">
+				验证码已发送
+			</view>
+			<view class="carArea">
+				<image class="img" src="../../static/imgs/car1.png" mode=""></image>
+			</view>
+			<view class="text1 text">
+				已经发送到
+			</view>
+			<view class="text2 text">
+				{{mailNum}}
+			</view>
+			<view class="text3 text">
+				请确认你的电子信箱，并输入六位数代码！
+			</view>
+			<view class="inputArea" :class="mailSixStatus==false?'inputAreaErr':''">
+				<input class="input" type="number" maxlength="6" placeholder="6位数代码" v-model="mailSix" @input="getMailCheckNumW" />
+				<text class="textErr" v-if="mailFail">电子邮件验证失败</text>
+			</view>
+			<view class="timeArea1 timeArea">
+				若确认为收到信，请检查垃圾信件或
+			</view>
+			<view class="timeArea2 timeArea" v-if="timeOver==false">
+				在{{sixty}}之后重新发送验证电子邮件
+			</view>
+			<view class="timeArea3 timeArea" v-if="timeOver==true" @click="reSendMailNum">
+				重新发送验证信
+			</view>
 		</view>
 		<!--  -->
 	</view>
 </template>
 
 <script>
+	import {encrypt,decrypt,system,systemId,base64ToArrayBuffer,sendData,sendD,work,regMail} from "../../lib/js/GlobalFunction.js"
 	export default {
 		data() {
 			return {
+				// ---首次longin判断是否登录邮箱---
+				marskShow:false,//marsk状态
+				getCheckArea:false,//获取验证码弹框-----------------
+				mailWriteArea:false,//邮箱登录输入验证码弹框-----------------		
+				tip:'将向您发送 One Click 登录的验证邮件',//错误信息
+				btnStatus:false,//邮箱 下一步可点击状态
+				btnMailStatus:null,//邮箱 验证状态
+				timeOver:false,//倒计时结束--邮箱--
+				getPhoneAreaShow:false,//手机获取验证码弹框----------
+				getPhoneBtnStatus:null,//获取手机号下一步按钮
+				phoneNumStatus:null,//手机号码格式错误
+				// ------手机号邮箱登录------
+				sixty:60,//60秒
+				sixtyOver:false,//60秒是否结束
+				mailNum:'',//邮箱账号
+				mailSix:'',//邮箱六位验证码
+				mailSixStatus:null,//邮箱六位验证码  格式状态
+				mailFail:false,//邮箱验证失败
+				// ---首次longin判断是否登录邮箱---
+				
+				
+				
+				
 				style:"",//顶部固定导航
 				tabData:[{imgsrcB:'../../static/imgs/zuan2b.png',imgsrcW:'../../static/imgs/zuan2w.png',text:'总排行榜'},
 				{imgsrcB:'../../static/imgs/lock2b.png',imgsrcW:'../../static/imgs/lock2w.png',text:'解锁榜'},
@@ -151,10 +241,16 @@
 				duration: 500,//动画时长
 				circular:true,//衔接
 				current:0,//当前activity的滑块
+				loginData:null,//登录成功信息
+
+				
 			};
 		},
 		onLoad() {//监听页面加载，其参数为上个页面传递的数据，参数类型为Object
-		
+				this.getLoginData()//
+				this.getHomeAdAndModule()
+				this.getHomeList()
+				
 				// console.log("页面加载")
 				// this.getSwiperData()
 		},
@@ -184,16 +280,145 @@
 			}
 		},
 		methods:{
-			changeTab:function(e){
+			marskNone:function(){//遮罩层点击
+			},
+			getMailNumW:function(event){//输入邮箱  进行验证
+				console.log(event.target.value)
+				this.mailNum = event.target.value
+				var test = regMail(event.target.value)
+				if(test){
+					this.btnStatus=true;
+					this.btnMailStatus=true;
+					this.tip='将向您发送 One Click 登录的验证邮件';
+				}else{
+					this.btnStatus=false;
+					this.btnMailStatus=false;
+					this.tip='请填写正确格式';
+				}
+			},
+			goWrite:function(){//邮箱下一步 输入验证码-----
+				this.sixty=60;
+				var array=base64ToArrayBuffer(encrypt(JSON.stringify({
+					Email:this.mailNum,//	string	邮箱号
+				})))
+				var res = JSON.parse(decrypt(sendData('POST',this.GLOBAL.urlPoint+'/Account/SendEmail',array)));
+				console.log(res)
+				if(res.code==100){
+					this.getCheckArea=false;
+					this.mailWriteArea=true;
+					console.log(this.timeOver)
+					var that=this;
+					var timer = setInterval(function(){
+						that.sixty--;
+						if(that.sixty==0){
+							clearInterval(timer)
+							that.timeOver=true;
+						}else{
+							that.timeOver=false;
+						}
+						console.log(that.sixty)
+					},1000)
+				}else{
+					
+				}
+				
+				// this.getCheckArea=false;
+				// this.mailWriteArea=true;
+			},
+			mailWriteAreaBack:function(){//邮箱输入验证码返回
+				this.getCheckArea=true;
+				this.mailWriteArea=false;
+			},
+			getMailCheckNumW:function(event){//输入邮箱验证码  进行验证
+				console.log(event.target.value)
+				this.mailSix = event.target.value
+				if(event.target.value.length==6){
+					this.mailSixStatus=true;
+					console.log(this.mailNum)
+					console.log(this.loginData.useridx)
+					console.log(Number(event.target.value))
+					var array=base64ToArrayBuffer(encrypt(JSON.stringify({
+						Email:this.mailNum,//	string	邮箱号
+						userIdx:this.loginData.useridx,// int 
+						Code:Number(event.target.value),// int 验证码
+					})))
+					console.log(array)
+					var res = JSON.parse(decrypt(sendData('POST',this.GLOBAL.urlPoint+'/Account/bindEmaill',array)));
+					console.log(res)
+					if(res.code==100){
+						this.mailWriteArea=false;
+						this.marskShow=false;
+					}else{
+						
+					}
+					
+					
+				}else{
+					this.mailSixStatus=false;
+				
+				}
+			},
+			reSendMailNum:function(){//邮箱重新发送验证码
+				this.goWrite()
+				console.log("邮箱重新发送验证码")
+			},
+			// ----------------------------------------------------------------------------------
+			getLoginData:function(){
+				var that = this;
+				uni.getStorage({
+					key: 'storage_login_str',
+					success: function (res) {
+						// console.log(JSON.parse(res.data))
+						that.loginData = JSON.parse(res.data);
+						// console.log(this.loginData.bindmail);
+						if(that.loginData.bindmail==false){
+							// console.log("未绑定邮箱");
+							that.marskShow = true;
+							that.getCheckArea =true;
+						}
+						
+					}
+				});
+			},
+			changeTab:function(e){//tab点击
 				// console.log(e.currentTarget.id);
 				this.current=e.currentTarget.id;
 				// console.log(this.current)
 			},
-			getChangeMsg:function(e){
+			getChangeMsg:function(e){//滑动
 				// console.log(e)
 				// console.log(e.detail.current)
 				this.current=e.detail.current;
+			},
+			getHomeAdAndModule:function(){//广告以及模块 登陆后请求 
+				console.log(this.loginData.webtoken)
+				console.log(this.loginData.useridx)
+				uni.request({
+					url: this.GLOBAL.urlPoint+'/userinfo/HomeAdAndModule' ,//仅为示例，并非真实接口地址。
+					method:"POST",
+					data: {
+						token:this.loginData.webtoken,//	string	
+						userIdx:this.loginData.useridx,//	int
+					},
+					success: (res) => {
+						// console.log(res);
+						console.log(JSON.parse(decrypt(res.data)))
+					}
+				});
+				
+			},
+			getHomeList:function(){//首页各模块列表
+				var array=base64ToArrayBuffer(encrypt(JSON.stringify({
+					type:2,//	int
+					useridx:10009833,//	int
+					page:1,//	int
+					limit:10,//	int
+				})))
+				var res = JSON.parse(decrypt(sendData('POST',this.GLOBAL.urlPoint+'/UserInfo/HomeList',array)));
+				// console.log(res)
+				
 			}
+		
 		}
 	}
 </script>
@@ -620,13 +845,211 @@ page{
 	// --bannerArea--
 	.banner{
 		height: 240rpx;
-		margin-bottom: 24px;
+		// margin-bottom: 24px;
+		margin-bottom: 100rpx;
 		.img{
 			width: 100%;
 			height: 240rpx;
 		}
 	}
-	// 
+	// ---- ----
+	// --邮箱获取验证码--
+	.getCheckArea{
+		position: fixed;
+		bottom: 0;
+		left:0;
+		z-index: 10001;
+		width:750rpx;
+		height:380rpx;
+		background:rgba(255,255,255,1);
+		border-radius:12rpx 12rpx 0rpx 0rpx;
+		transition: all 0.3s;
+		.more{
+			position: absolute;
+			top: 41rpx;
+			left: 41rpx;
+			width: 34rpx;
+			height: 34rpx;
+		}
+		.title{
+			height: 32rpx;
+			font-size: 32rpx;
+			text-align: center;
+			line-height: 32rpx;
+			margin-top: 41rpx;
+			color:rgba(89,89,89,1);
+			font-weight: 600;
+		}
+		.inputArea{
+			width:536rpx;
+			height:66rpx;
+			border:2rpx solid rgba(246,246,246,1);
+			background:rgba(246,246,246,1);
+			border-radius:10rpx;
+			margin: auto;
+			margin-top: 63rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			.img{
+				width: 30rpx;
+				height: 22rpx;
+			}
+			.input{
+				width: 420rpx;
+				margin-left: 32rpx;
+				font-size:30rpx;
+				color:rgba(172,172,172,1);
+			}
+			
+		}
+		.inputAreaErr{
+			border:2rpx solid red;
+		}
+		.tips{
+			width:540rpx;
+			height:22rpx;
+			font-size:22rpx;
+			margin: auto;
+			margin-top: 15rpx;
+			font-weight:400;
+			color:rgba(172,172,172,1);
+			line-height:22rpx;
+		}
+		.tipsErr{
+			color:red;
+		}
+		.btn{
+			position: absolute;
+			width: 100%;
+			height: 70rpx;
+			bottom: 0;
+			background:rgba(172,172,172,1);
+			font-size:30rpx;
+			font-family:PingFang TC;
+			color:rgba(255,255,255,1);
+			line-height:70rpx;
+			text-align: center;
+		}
+		.btnOk{
+			background:rgba(255,214,0,1)
+		}
+	}
+	// --邮箱输入验证码--
+	.mailWriteArea{
+		position: fixed;
+		bottom: 0;
+		left:0;
+		z-index: 10001;
+		width:750rpx;
+		height:870rpx;
+		background:rgba(255,255,255,1);
+		border-radius:12rpx 12rpx 0rpx 0rpx;
+		transition: all 0.3s;
+		.back{
+			position: absolute;
+			top: 41rpx;
+			left: 41rpx;
+			width: 34rpx;
+			height: 34rpx;
+		}
+		.title{
+			height: 32rpx;
+			font-size: 32rpx;
+			text-align: center;
+			line-height: 32rpx;
+			margin-top: 41rpx;
+			color:rgba(89,89,89,1);
+			font-weight: 600;
+		}
+		.carArea{
+			height: 173rpx; 
+			text-align: center;
+			margin-top: 73rpx;
+			.img{
+				height: 173rpx;
+				width: 350rpx;
+			}
+		}
+		.text{
+			height: 30rpx;
+			font-size: 30rpx;
+			text-align: center;
+			line-height: 30rpx;
+			color:rgba(112,112,112,1);
+			font-weight: 500;
+		}
+		.text1{
+			margin-top: 73rpx;
+		}
+		.text2{
+			margin-top: 27rpx;
+		}
+		.text3{
+			margin-top: 27rpx;
+			font-size: 26rpx;
+			height: 26rpx;
+			line-height: 26rpx;
+		}
+		.inputArea{
+			width:536rpx;
+			height:66rpx;
+			border:2rpx solid rgba(246,246,246,1);
+			background:rgba(246,246,246,1);
+			border-radius:10rpx;
+			margin: auto;
+			margin-top: 39rpx;
+			margin-bottom: 100rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+			.input{
+				width: 490rpx;
+				font-size:30rpx;
+				color:rgba(172,172,172,1);
+			}
+			.textErr{
+				position: absolute;
+				left: 0;
+				bottom: -40rpx;
+				color: red;
+				font-size: 24rpx;
+				line-height: 24rpx;
+			}
+		}
+		.inputAreaErr{
+			border:2rpx solid red;
+		}
+		.timeArea{
+			font-size:26rpx;
+			font-family:PingFang TC;
+			font-weight:400;
+			color:rgba(172,172,172,1);
+			line-height:26rpx;
+			text-align: center;
+		}
+		.timeArea1{
+		}
+		.timeArea2{
+			margin-top: 12rpx;
+		}
+		.timeArea3{
+			margin-top: 12rpx;
+			text-decoration: underline;
+		}
+	}
+	// --遮罩层--
+	.marsk{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10000;
+		width: 100%;
+		height: 100%;
+		background:rgba(0,0,0,0.4);
+	}
+	// --遮罩层--
 	
 }
 </style>

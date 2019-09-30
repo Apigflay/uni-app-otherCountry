@@ -1,5 +1,7 @@
 <template>
 	<view class="content">
+		<image src="../../static/imgs/fang1y.png" mode=""></image>
+		<image src="../../static/imgs/mail1y.png" mode=""></image>
 		<uni-icon type="person" size="30"></uni-icon>
 		<!-- <span class="iconfont icon-paihangbang"></span> -->
 		<!-- @click="goPage('login')"
@@ -152,23 +154,18 @@
 				}
 				var that =this;
 				function work(data) {
-					console.log(that.aaa)
-					var str = ""
 					var fileReader = new FileReader();
 					fileReader.onload = function (progressEvent) {
-						console.log(1)
 						var arrayBuffer = this.result; // arrayBuffer即为blob对应的arrayBuffer
 						var HeadRecv = new Uint32Array(arrayBuffer, 0, 3);
 						var strArray = new Uint8Array(arrayBuffer, 12, HeadRecv[0] - 12 - 1);
-						str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
-
-						that.aaa=str;
-						console.log(this)
+						var str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
+						
+						console.log(HeadRecv[1])
+						console.log(JSON.parse(str))
 						// console.log(HeadRecv[1],JSON.parse(str))
 					};
 					fileReader.readAsArrayBuffer(data);
-					console.log("2",str)
-					return 'haha';
 				}
 			
 					var arr = sendD(array)
@@ -248,6 +245,11 @@
 
 <style lang="scss">
 @import '../../iconfont/iconfont.css';
+page{
+	width: 100%;
+	height: 100%;
+	background: #fff;
+}
 .content {
 	// display: flex;
 	// flex-direction: column;

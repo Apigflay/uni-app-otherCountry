@@ -20,7 +20,7 @@
 					</view>
 					<view class="content">
 						<view class="center">
-							<text class="p1">@sasa.baby1235 <view v-if="show_spot" class="spot"></view></text>
+							<view class="p1">@sasa.baby1235 <view v-if="show_spot" class="spot"></view></view>
 							<text class="p2">9月vip为两台飞机  享有8.9月百部影片，你的女神...</text>
 						</view>
 						<view class="right">
@@ -36,6 +36,8 @@
 				</view>
 			</view>
 		</view>
+		<!-- TagBar -->
+		<!-- <TagBar></TagBar> -->
 	</view>
 </template>
 
@@ -121,6 +123,7 @@ page{
 		.list{
 			margin-left:28rpx;
 			padding-top:100rpx;
+			padding-bottom:90rpx;
 			.listPer{
 				height: 113rpx;
 				display:flex;

@@ -1,6 +1,14 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+		    "path" : "pages/startup/startup",
+		    "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"app-plus": {
@@ -33,17 +41,9 @@
 				    "titleNView": false 
 				}
 			}
-        },
-        {
-            "path" : "pages/home/home",
-            "style" : {
-				"app-plus": {
-				                  "titleNView": false
-			    }
-			}
         }
         ,{
-            "path" : "pages/home1/home1",
+            "path" : "pages/home/home",
             "style" : {
 				"app-plus": {
 				                  "titleNView": false
@@ -91,14 +91,6 @@
 			}
         }
         ,{
-            "path" : "pages/startup/startup",
-            "style" : {
-				"app-plus": {
-				                  "titleNView": false
-				}
-			}
-        }
-        ,{
             "path" : "pages/news/news",
             "style" : {
 				"app-plus": {
@@ -138,6 +130,130 @@
 				}
 			}
         }
+        ,{
+            "path" : "pages/facebook/facebook",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/my/my",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/changeintroduction/changeintroduction",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/lockuser/lockuser",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/notification/notification",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/rankinglist/rankinglist",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/personaldata/personaldata",
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/anchorpersonal/anchorpersonal",//主播个人资料
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/anchorme/anchorme",//主播我的
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/commoditymanagement/commoditymanagement",//主播商品管理
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/addworks/addworks",//主播添加作品
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/revenuemanagement/revenuemanagement",//收益管理
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/dataset/dataset",//h5个人资料设定
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/electronicreceipt/electronicreceipt",//我的电子收据	
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/like/like",//喜好
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
+        ,{
+            "path" : "pages/connectedaccount/connectedaccount",//已连接账号
+            "style" : {
+				"app-plus": {
+				                  "titleNView": false
+				}
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",//导航栏标题颜色及状态栏前景颜色，仅支持 black/white
@@ -145,32 +261,37 @@
 		"navigationBarBackgroundColor": "#F8F8F8",//导航栏背景颜色（同状态栏背景色）
 		"backgroundColor": "#F8F8F8",//窗口的背景色
 		"onReachBottomDistance":50//页面上拉触底事件触发时距页面底部距离，单位只支持px，详见页面生命周期
+	},
+	"tabBar": {
+		"color": "#7A7E83",//tab 上的文字默认颜色
+		"selectedColor": "#3cc51f",//tab 上的文字选中时的颜色
+		"borderStyle": "black",//tabbar 上边框的颜色，仅支持 black/white
+		"backgroundColor": "#000",//tab 的背景色
+		"list": [{
+			"pagePath": "pages/home/home",
+			"iconPath": "static/imgs/room1w.png",
+			"selectedIconPath": "static/imgs/room1y.png",
+			"text": ""
+		}, {
+			"pagePath": "pages/search/search",
+			"iconPath": "static/imgs/fang1w.png",
+			"selectedIconPath": "static/imgs/fang1y.png",
+			"text": ""
+		}, {
+			"pagePath": "pages/news/news",
+			"iconPath": "static/imgs/mail1w.png",
+			"selectedIconPath": "static/imgs/mail1y.png",
+			"text": ""
+		}, {
+			"pagePath": "pages/chat/chat",
+			"iconPath": "static/imgs/xin1w.png",
+			"selectedIconPath": "static/imgs/xin1y.png",
+			"text": ""
+		},{
+			"pagePath": "pages/my/my",
+			"iconPath": "static/imgs/my1w.png",
+			"selectedIconPath": "static/imgs/my1y.png",
+			"text": ""
+		}]
 	}
-	// "tabBar": {
-	// 	"color": "#7A7E83",//tab 上的文字默认颜色
-	// 	"selectedColor": "#3cc51f",//tab 上的文字选中时的颜色
-	// 	"borderStyle": "black",//tabbar 上边框的颜色，仅支持 black/white
-	// 	"backgroundColor": "#ffffff",//tab 的背景色
-	// 	"list": [{
-	// 		"pagePath": "pages/index/index",
-	// 		"iconPath": "static/image/icon_component.png",
-	// 		"selectedIconPath": "static/image/icon_component_HL.png",
-	// 		"text": "组件"
-	// 	}, {
-	// 		"pagePath": "pages/phonenum/phonenum",
-	// 		"iconPath": "static/image/icon_API.png",
-	// 		"selectedIconPath": "static/image/icon_API_HL.png",
-	// 		"text": "接口"
-	// 	}, {
-	// 		"pagePath": "pages/phonenum/phonenu",
-	// 		"iconPath": "static/image/icon_API.png",
-	// 		"selectedIconPath": "static/image/icon_API_HL.png",
-	// 		"text": "接口"
-	// 	}, {
-	// 		"pagePath": "pages/phonenum/phnenum",
-	// 		"iconPath": "static/image/icon_API.png",
-	// 		"selectedIconPath": "static/image/icon_API_HL.png",
-	// 		"text": "接口"
-	// 	}]
-	// }
 }

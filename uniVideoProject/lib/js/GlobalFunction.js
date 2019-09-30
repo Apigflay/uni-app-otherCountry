@@ -106,7 +106,34 @@ export function sendD(content) {
   * @param Blob
   * @returns [string]
   */
-
- 
+ export function work(data) {// someErr
+ 	var fileReader = new FileReader();
+ 	fileReader.onload = function (progressEvent) {
+ 		var arrayBuffer = this.result; // arrayBuffer即为blob对应的arrayBuffer
+ 		var HeadRecv = new Uint32Array(arrayBuffer, 0, 3);
+ 		var strArray = new Uint8Array(arrayBuffer, 12, HeadRecv[0] - 12 - 1);
+ 		var str = new TextDecoder().decode(strArray);//{"code":-1,"error":"用户名或密码错误"}
+ 		// console.log(HeadRecv[1],JSON.parse(str))
+		//to do
+ 		console.log(HeadRecv[1])
+ 		console.log(JSON.parse(str))
+ 	};
+ 	fileReader.readAsArrayBuffer(data);
+ }
+  /**
+  * 国籍通用邮箱正则
+  * @param string
+  * @returns [true?false]
+  */
+ export function regMail(str){
+	 var reg = new RegExp("^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$"); 
+	 var test =reg.test(str);
+	 // console.log(test);
+	 if(test){
+		 return true;
+	 }else{
+		 return false;
+	 }
+ }
  
  
